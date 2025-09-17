@@ -1,0 +1,276 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -544,
+        -64
+      ],
+      "id": "e2aadbf1-36ec-4742-b43a-1fad61b9c0a1",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hztKWyxoPCenrajY",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Sponsorship",
+              "description": "When the email is about sponsorship proposals, brand collaboration, or partnership"
+            },
+            {
+              "category": "High Priority",
+              "description": "Security alerts usually indicate suspicious login attempts, account access issues, or potential threats."
+            },
+            {
+              "category": "Marketing/Promotional ",
+              "description": "if the email is promoting a product, service, event, or contains invitations/newsletters.   4. Other → if it doesn’t fit any of the above."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -336,
+        -64
+      ],
+      "id": "7cba3f1a-bd94-496d-bd34-a97e8987b87e",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        112
+      ],
+      "id": "f5737d27-69d3-451d-a10e-ebcd9a6faf24",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KngmCfCabWuGtRDH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-1.5-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-1.5-flash-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "you are a helpfull assistant of abdul nafay 3d\n\nYou are an email assistant.\nThe email was classified as \"Sponsorship.\"\n\nYour job:\n- Reply politely and professionally.\n- Thank the sender for their sponsorship proposal.\n- Acknowledge their mentioned cost ($3000).\n- Ask for more details (what benefits are included, duration, target audience).\n- Keep the reply short and professional.\n\nRespond only with the reply text (no extra explanation).\n\nyour job is to responde email below",
+              "role": "model"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -384
+      ],
+      "id": "afb6d63e-9ad1-4f56-889c-3589edd5771f",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KngmCfCabWuGtRDH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-1.5-pro-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-1.5-pro-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "\nyou are a assistant of ayesha\nYou are an email assistant.\nThe email was classified as \"High Priority\" with subject \"Security alert.\"\n\nYour job:\n- Reply briefly and professionally.\n- Acknowledge the security alert.\n- Assure the sender that their concern is taken seriously.\n- Inform them that the issue will be checked immediately.\n- Do not add extra text or explanation, only provide the reply message.\n\n\nyour job is responde email below:"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        32,
+        -160
+      ],
+      "id": "5cd16bc4-1b4a-4f20-9d78-48cc02a52869",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KngmCfCabWuGtRDH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-1.5-flash-latest",
+          "mode": "list",
+          "cachedResultName": "models/gemini-1.5-flash-latest"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an email assistant.\nThe email was classified as \"Marketing/Promotional.\"\n\nYour job:\n- Respond briefly and politely.\n- Thank the sender for sharing.\n- Politely decline or indicate that no further action is required.\n- Keep the reply short (2–3 sentences maximum).\n- Do not add extra text or explanation, only provide the reply message.\n\nyour job is responde the email below:\n\n {{ $json.text }}",
+              "role": "model"
+            }
+          ]
+        },
+        "simplify": false,
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        16,
+        48
+      ],
+      "id": "18eb4bdd-68ed-44c7-b086-cad95bd4ad30",
+      "name": "Message a model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "KngmCfCabWuGtRDH",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "message": "={{ $json.candidates[0].content.parts[0].text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        48
+      ],
+      "id": "82dbd241-2256-4a30-8b80-42592fdd9854",
+      "name": "Create a draft",
+      "webhookId": "7a76acd6-6760-4b8e-b930-b25463ed1bf8",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "hztKWyxoPCenrajY",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Message a model2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model2": {
+      "main": [
+        [
+          {
+            "node": "Create a draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4bb52110-1183-4937-8519-1bd50d8e1beb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "018159628dbc4cd75a619b13cc638421a4081f82f39c6789b0d4a7417bf20786"
+  },
+  "id": "wTvs2eY0d0Al1341",
+  "tags": []
+}
